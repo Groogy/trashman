@@ -1,0 +1,9 @@
+name: gc
+version: 0.1.0
+
+authors:
+  - Henrik Valter Vogelius Hansson <groogy@groogy.se>
+
+crystal: 0.23.0+13
+
+license: zlib
