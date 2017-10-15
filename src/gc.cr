@@ -6,15 +6,18 @@ end
 class Foo
   include GCProfiler
 
-  @val = 50
+  @val = StaticArray(Int32, 128).new(0)
 end
 
-class Array
-  include GCProfiler
+def test_meth
+  foo = Foo.new
 end
 
-foo = Foo.new
-pp foo
+100000.times do
+  test_meth
+  foo = Foo.new
+end
+GC.collect
 
 File.open "data.log", "w" do |file|
   analyzer = GCProfiler::Analyzer.new

@@ -23,17 +23,3 @@ module GCProfiler
     end
   end
 end
-
-
-module GC
-  def self.malloc(size : Int)
-    ptr = previous_def
-    unless GCProfiler::Statistics.guard?
-      GCProfiler::Statistics.guard=true
-      callstack = CallStack.new
-      GCProfiler::Statistics.on_allocation ptr, callstack
-      GCProfiler::Statistics.guard=false
-    end
-    ptr
-  end
-end

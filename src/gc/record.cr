@@ -1,22 +1,35 @@
-class GCProfiler::Record
+abstract class GCProfiler::BaseRecord
+  abstract def callstack
+  abstract def allocations
+  abstract def deallocations
+  abstract def untrack
+  abstract def type_str
+end
+
+class GCProfiler::Record(T) < GCProfiler::BaseRecord
   @callstack : CallStack
-  @type : String
-  @references : Array(Ref)
+  @references : Array(Ref(T))
   @lifetimes : Array(Time::Span)
   @allocations : UInt64
   @deallocations : UInt64
 
-  getter callstack, allocations, deallocations, type
+  getter callstack, allocations, deallocations
 
-  def initialize(@callstack, @type)
-    @references = Array(Ref).new
+  def initialize(@callstack)
+    @references = Array(Ref(T)).new
     @lifetimes = Array(Time::Span).new
     @allocations = 0u64
     @deallocations = 0u64
   end
 
-  def tracks?(ref)
-    @references.includes? ref
+  def type_str
+    T.to_s
+  end
+
+  def tracks?(ptr)
+    @references.each do |ref|
+      return true if ref.reference == ptr
+    end
   end
 
   def track(ref)
@@ -24,10 +37,13 @@ class GCProfiler::Record
     @allocations += 1u64
   end
 
-  def untrack(ref)
-    if ref = @references.delete ref
-      @lifetimes << ref.calc_lifetime Time.utc_now
-      @deallocations += 1u64
+  def untrack
+    @references.reject! do |ref|
+      if ref.invalid?
+        @lifetimes << ref.calc_lifetime Time.utc_now
+        @deallocations += 1u64
+      end
+      ref.invalid?
     end
   end
 

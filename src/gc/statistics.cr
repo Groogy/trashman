@@ -1,5 +1,5 @@
 module GCProfiler::Statistics
-  @@records = [] of Record
+  @@records = [] of BaseRecord
   @@guard = false
 
   def self.guard=(flag)
@@ -15,30 +15,22 @@ module GCProfiler::Statistics
   end
 
   def self.on_allocation(ref, callstack)
-    record = find_record callstack, typeof(ref)
-    record.track ref.as(Void*)
+    record = find_record callstack, ref
+    record.track ref
   end
 
   def self.on_finalize(ref)
-    record = find_record ref.as(Void*)
-    if record
-      record.untrack ref.as(Void*)
+    @@records.each do |record|
+      record.untrack
     end
   end
 
-  def self.find_record(callstack : CallStack, type) : Record
+  def self.find_record(callstack : CallStack, ref : T) : Record(T) forall T
     @@records.each do |record|
-      return record if record.callstack == callstack
+      return record.as(Record(T)) if record.callstack == callstack
     end
-    record = Record.new callstack, type.to_s
+    record = Record(T).new callstack
     @@records << record
     record
-  end
-
-  def self.find_record(ref : Void*) : Record?
-    @@records.each do |record|
-      return record if record.tracks?(ref)
-    end
-    nil
   end
 end

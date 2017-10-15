@@ -7,7 +7,7 @@ class GCProfiler::Analyzer
   end
 
   def print_record(io, record)
-    io.puts "#{record.type} -- Avg Lifetime: #{record.calc_average_lifetime}"
+    io.puts "#{record.type_str} -- Avg Lifetime: #{record.calc_average_lifetime}"
     io.puts "Allocations: #{record.allocations}, Deallocations: #{record.deallocations}"
     backtrace = record.callstack.printable_backtrace
     backtrace.each do |line|
