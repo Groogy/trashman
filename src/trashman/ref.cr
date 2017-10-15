@@ -1,6 +1,6 @@
 require "weak_ref"
 
-class GCProfiler::Ref(T)
+class Trashman::Ref(T)
   @reference : WeakRef(T)
   @life_start : Time
 

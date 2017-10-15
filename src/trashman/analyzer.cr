@@ -1,4 +1,4 @@
-class GCProfiler::Analyzer
+class Trashman::Analyzer
   def print_stats(io)
     records = Statistics.records
     records.each do |record|

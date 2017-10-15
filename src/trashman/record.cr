@@ -1,4 +1,4 @@
-abstract class GCProfiler::BaseRecord
+abstract class Trashman::BaseRecord
   abstract def callstack
   abstract def allocations
   abstract def deallocations
@@ -6,7 +6,7 @@ abstract class GCProfiler::BaseRecord
   abstract def type_str
 end
 
-class GCProfiler::Record(T) < GCProfiler::BaseRecord
+class Trashman::Record(T) < Trashman::BaseRecord
   @callstack : CallStack
   @references : Array(Ref(T))
   @lifetimes : Array(Time::Span)

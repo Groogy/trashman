@@ -16,9 +16,28 @@ dependencies:
 
 ```crystal
 require "gc"
-```
 
-TODO: Write usage instructions here
+class Foo
+  include Trashman
+
+  @val = StaticArray(Int32, 128).new(0)
+end
+
+def test_meth
+  foo = Foo.new
+end
+
+10000000.times do
+  test_meth
+  foo = Foo.new
+end
+GC.collect
+
+File.open "data.log", "w" do |file|
+  analyzer = Trashman::Analyzer.new
+  analyzer.print_stats(file)
+end
+```
 
 ## Development
 

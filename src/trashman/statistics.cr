@@ -1,4 +1,4 @@
-module GCProfiler::Statistics
+module Trashman::Statistics
   @@records = [] of BaseRecord
   @@guard = false
 
