@@ -18,15 +18,18 @@ end
 
 class Trashman::Analyzer
   @sorter : Proc(AnalyzerRecord, AnalyzerRecord, Int32)
-  @records = [] of AnalyzerRecord
+  @formatter : Formatter
+  @records : Array(AnalyzerRecord)
 
-  property sorter
+  property sorter, formatter
 
   def initialize
     Statistics.guard=true
     @sorter = ->(a : AnalyzerRecord, b : AnalyzerRecord) {
       a.avg_lifetime <=> b.avg_lifetime
     }
+    @formatter = DefaultFormatter.new
+    @records = [] of AnalyzerRecord
     process_records
     Statistics.guard=false
   end
@@ -39,13 +42,8 @@ class Trashman::Analyzer
   end
 
   def print_record(io, record)
-    io.puts "===== #{record.type} ====="
-    io.puts "Allocations: #{record.allocations} --- Deallocations: #{record.deallocations}"
-    io.puts "Avg Lifetime: #{record.avg_lifetime}"
-    backtrace = record.callstack.printable_backtrace
-    backtrace.each do |line|
-      io.puts line
-    end
+    @formatter.print_record_header io, record
+    @formatter.print_record_backtrace io, record.callstack
   end
 
   private def process_records
