@@ -1,6 +1,17 @@
 class Trashman::Analyzer
+  @sorter : Proc(BaseRecord, BaseRecord, Int32)
+
+  property sorter
+
+  def initialize
+    @sorter = ->(a : BaseRecord, b : BaseRecord) {
+      a.calc_average_lifetime <=> b.calc_average_lifetime
+    }
+  end
+
   def print_stats(io)
     records = Statistics.records
+    records = records.sort &@sorter
     records.each do |record|
       print_record io, record
     end
