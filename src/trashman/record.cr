@@ -26,6 +26,10 @@ class Trashman::Record(T) < Trashman::BaseRecord
     T.to_s
   end
 
+  def type_size
+    sizeof(T)
+  end
+
   def tracks?(ptr)
     @references.each do |ref|
       return true if ref.reference == ptr

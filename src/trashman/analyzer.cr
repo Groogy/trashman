@@ -4,8 +4,9 @@ struct Trashman::AnalyzerRecord
   @allocations : UInt64
   @deallocations : UInt64
   @type : String
+  @type_size : Int32
 
-  getter callstack, avg_lifetime, allocations, deallocations, type
+  getter callstack, avg_lifetime, allocations, deallocations, type, type_size
 
   def initialize(record)
     @callstack = record.callstack
@@ -13,6 +14,7 @@ struct Trashman::AnalyzerRecord
     @allocations = record.allocations
     @deallocations = record.deallocations
     @type = record.type_str
+    @type_size = record.type_size
   end
 end
 
