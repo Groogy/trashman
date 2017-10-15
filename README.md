@@ -1,6 +1,6 @@
-# gc
+# Trashman
 
-TODO: Write a description here
+This is a simple memory profiler for Crystal applications. It works with any type that derives itself from Reference. It hooks itself into the allocation and finalizer methods of your classes so it is quite invasive. Thus it is an opt in feature and you have to mixin the Trashman module for it to record allocations on the type. You can also use this on standard library types such as Arrays and Strings to try and find poltergeist objects that might trigger the GC unnessecarily. It will however not be enabled unless you compile the application with -D ENABLE_TRASHMAN in order to make it as easy as possible to ignore it when running production code.
 
 ## Installation
 
@@ -8,14 +8,14 @@ Add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:
-  gc:
-    github: [your-github-name]/gc
+  trashman:
+    github: Groogy/trashman
 ```
 
 ## Usage
 
 ```crystal
-require "gc"
+require "trashman"
 
 class Foo
   include Trashman
@@ -45,7 +45,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/gc/fork )
+1. Fork it ( https://github.com/Groogy/trashman/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -53,4 +53,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) Henrik Valter Vogelius Hansson - creator, maintainer
+- [Groogy](https://github.com/Groogy) Henrik Valter Vogelius Hansson - creator, maintainer
