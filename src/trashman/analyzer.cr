@@ -39,8 +39,9 @@ class Trashman::Analyzer
   end
 
   def print_record(io, record)
-    io.puts "#{record.type} -- Avg Lifetime: #{record.avg_lifetime}"
-    io.puts "Allocations: #{record.allocations}, Deallocations: #{record.deallocations}"
+    io.puts "===== #{record.type} ====="
+    io.puts "Allocations: #{record.allocations} --- Deallocations: #{record.deallocations}"
+    io.puts "Avg Lifetime: #{record.avg_lifetime}"
     backtrace = record.callstack.printable_backtrace
     backtrace.each do |line|
       io.puts line
