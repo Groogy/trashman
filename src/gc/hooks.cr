@@ -12,7 +12,9 @@ module GCProfiler
     end
 
     def finalize
-      #previous_def
+      {% if @type.methods.includes? :finalize %}
+        previous_def
+      {% end %}
       unless GCProfiler::Statistics.guard?
         GCProfiler::Statistics.guard=true
         GCProfiler::Statistics.on_finalize self
