@@ -32,7 +32,9 @@ class Trashman::Analyzer
     }
     @formatter = DefaultFormatter.new
     @records = [] of AnalyzerRecord
-    process_records
+    {% if flag?(:ENABLE_TRASHMAN) && flag?(:release) == false %}
+      process_records
+    {% end %}
     Statistics.guard=false
   end
 
