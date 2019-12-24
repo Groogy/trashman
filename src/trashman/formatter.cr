@@ -1,3 +1,4 @@
+@[Trashman::Ignore]
 abstract class Trashman::Formatter
   abstract def print_record_header(io, record)
   abstract def print_record_backtrace(io, callstack)

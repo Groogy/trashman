@@ -1,3 +1,4 @@
+@[Trashman::Ignore]
 struct Trashman::AnalyzerRecord
   @callstack : CallStack
   @avg_lifetime : Time::Span
@@ -18,6 +19,7 @@ struct Trashman::AnalyzerRecord
   end
 end
 
+@[Trashman::Ignore]
 class Trashman::Analyzer
   @sorter : Proc(AnalyzerRecord, AnalyzerRecord, Int32)
   @formatter : Formatter
@@ -26,21 +28,19 @@ class Trashman::Analyzer
   property sorter, formatter
 
   def initialize
-    Statistics.guard=true
     @sorter = ->(a : AnalyzerRecord, b : AnalyzerRecord) {
       a.avg_lifetime <=> b.avg_lifetime
     }
     @formatter = DefaultFormatter.new
     @records = [] of AnalyzerRecord
-    {% if flag?(:ENABLE_TRASHMAN) && flag?(:release) == false %}
+    {% if Trashman::Config::IS_ENABLED %}
       process_records
     {% end %}
-    Statistics.guard=false
   end
 
   def print_stats(io)
     records = @records.sort &@sorter
-    records.each do |record|
+    @records.each do |record|
       print_record io, record
     end
   end

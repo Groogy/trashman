@@ -1,17 +1,20 @@
 module Trashman::Statistics
-  @@records = [] of BaseRecord
-  @@guard = false
+  @@records = Trashman::RecordNode.new
+  @@guard = true
 
-  def self.guard=(flag)
-    @@guard = flag
-  end
-
-  def self.guard?
-    @@guard
+  def self.initialize()
+    records = @@records
   end
 
   def self.records
     @@records
+  end
+
+  def self.guard=(@@guard)
+  end
+
+  def self.guard?
+    @@guard
   end
 
   def self.on_allocation(ref, callstack)
@@ -26,11 +29,13 @@ module Trashman::Statistics
   end
 
   def self.find_record(callstack : CallStack, ref : T) : Record(T) forall T
-    @@records.each do |record|
-      return record.as(Record(T)) if record.callstack == callstack
+    @@records.each do |r|
+      if record = r.as?(Record(T))
+        return record if record.callstack == callstack
+      end
     end
     record = Record(T).new callstack
-    @@records << record
+    @@records.push record
     record
   end
 end
